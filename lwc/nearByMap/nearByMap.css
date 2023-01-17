@@ -1,0 +1,21 @@
+.dummy{
+	color : blue;
+}
+.scroll {
+      
+        width: 600px;
+        max-height: 200px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        text-align: center;
+          padding: 10px;
+       
+      }
+      .editScroll{
+        width: 600px;
+        max-height: 200px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        text-align: center;
+          padding: 10px;
+      }

@@ -1,0 +1,373 @@
+<!--
+@description       : 
+@author            : 
+@group             : 
+@last modified on  : 12-22-2022
+@last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+<lightning-card>
+
+<lightning-button  slot="actions" variant="brand"
+label="Add New Filter"
+title="Add New Filter"
+onclick={openModal}>
+</lightning-button>
+<template if:true={isModalOpen}>
+<!-- Modal/Popup Box LWC starts here -->
+<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+		<div class="slds-modal__container ">
+			<!-- Modal/Popup Box LWC header here -->
+			<header class="slds-modal__header">
+				<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+						<lightning-icon icon-name="utility:close"
+							alternative-text="close"
+							variant="inverse"
+							size="small" ></lightning-icon>
+						<span class="slds-assistive-text">Close</span>
+				</button>
+				<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Nearby Map Filter</h2>
+			</header>
+			<!-- Modal/Popup Box LWC body starts here -->
+			<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+			<div class="slds-grid slds-wrap slds-m-around_medium">
+				<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+					<lightning-input type="text"  class="validate" label="Name" value={nameValue} onchange={handleNameChange} required>
+					</lightning-input>
+				</div>
+				<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+					<lightning-combobox name="contacts"  class="validate" label="Source Object" placeholder="Choose object..."
+						value={objectValue} onchange={handleObjectChange} options={objectOptions} required>
+					</lightning-combobox>
+				</div>
+				<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+					<lightning-combobox name="contacts" class="validate"  label="Source Address" placeholder="Choose address..."
+						value={fieldName} onchange={handleFieldChange} options={fieldList} required>
+					</lightning-combobox>
+				</div>
+				
+					<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+						<lightning-combobox name="contacts"  class="validate" label="Target Object" placeholder="Choose object..."
+							value={targetObjectValue} onchange={handleTagetObjectChange} options={targetobjectOptions} required>
+						</lightning-combobox>
+					</div>
+					<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+						<lightning-combobox name="contacts"  class="validate" label="Target Address" placeholder="Choose address..."
+							value={tagretfieldName} onchange={handleTargetFieldChange} options={trgetAddressfieldList} required>
+						</lightning-combobox>
+					</div>
+			
+	
+				<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+					<lightning-input type="text" label="Distance"  class="validate" value={DistanceValue} onchange={handleDistanceValueChange} required>
+					</lightning-input>
+				</div>
+				
+	
+				<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+					<lightning-combobox name="distance"  class="validate" label="Distance Unit" placeholder="Choose distance..."
+						value={distanceName} onchange={handleDistanceChange} options={distanceList} required>
+					</lightning-combobox>
+				</div>
+
+				<div
+					class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12 slds-p-vertical_x-small">
+					<p class="slds-text-heading_small">Filter By Additional Fields:</p>
+				</div>
+
+				<div style="display:flex; justify-content: space-around; margin-left: 20px; width: 100%;">
+
+				<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12" style="margin: 9px;">
+					<lightning-combobox name="contacts"  class ="validateFilte" label="Fields" placeholder="Choose field..."
+		value={logicValue} onchange={logicHandleChange} options={trgetfieldList}>
+	</lightning-combobox>
+				</div>
+				
+				<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12" style="margin: 10px;">
+					<lightning-combobox name="contacts"   class ="validateFilte" label="Operators" placeholder="Choose operator..."
+					value={operatorValue} onchange={operatorHandleChange} options={operatorsOptions}>
+				</lightning-combobox>
+					
+				</div>
+
+				<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12" style="margin: 9px;">
+					<lightning-input type="text" label="Value"   class ="validateFilte" value={filterValue} onchange={handleFilterChange} >
+					</lightning-input>
+					
+				</div>
+				<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12" style="margin-top: 31px;">
+					<lightning-layout-item padding="horizontal-small">
+						<lightning-button
+							 variant="brand"
+							 label="Add"
+							 onclick={addFilterToList}>
+						</lightning-button>
+					</lightning-layout-item>
+				</div>
+			
+				
+
+			</div>
+       
+			
+				<div class="scroll">
+              <ul class="slds-has-dividers_around-space">
+					
+					<template for:each={itemList} for:item="item" for:index="index">
+						<li class="slds-item" key={item.id}>
+							<lightning-layout multiple-rows>
+								<div style="display: flex; justify-content: space-around;">	
+
+								<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12" style="margin:-2px">
+									<lightning-input name="contacts" label="Fields" placeholder="Choose field..."
+						value={item.templogicValue} disabled>
+					</lightning-input>
+								</div>
+								
+								<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12" style="margin:-4px">
+									<lightning-combobox name="contacts" label="Operators" placeholder="Choose operator..."
+									value={item.tempoperatorValue}  options={operatorsOptions} disabled>
+								</lightning-combobox>
+									
+								</div>
+
+								<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12" style="margin:-3px">
+									<lightning-input type="text" label="Value" value={item.tempfilterValue}  disabled >
+									</lightning-input>
+									
+								</div>
+
+								<div class="slds-p-top_medium">
+									<lightning-icon icon-name="action:delete" access-key={item.id} id={index}
+										alternative-text="Delete Row" size="small" title="Delete Row" onclick={removeRow}>
+									</lightning-icon>
+								</div>
+
+							</div>
+
+							
+
+							</lightning-layout>
+						</li>
+					</template>
+				</ul>
+				</div>
+				
+				<div>
+
+						<lightning-radio-group name="radioGroup"
+                          label="Filter Logic"
+                          options={andOroptions}
+                          value={IsORValue}
+								  onchange={handleIsOrChange}
+                          type="radio"></lightning-radio-group>
+				</div>
+					</br>
+				<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+					
+					<lightning-combobox name="Limit"   class ="validateFilte" label="Limit" placeholder="Choose Limit..."
+					value={limitsValue} onchange={handleLimitChange} options={limitOptions} required>
+				</lightning-combobox>
+					
+				</div>
+				<div
+					class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12 slds-p-vertical_x-small">
+					<lightning-input type="checkbox" label="Active/Inactive" checked={checkboxVal}
+						onchange={handleStatusChange} ></lightning-input>
+                 <div style="margin-left: -8.4%;">
+				 <lightning-input class="slds-p-left_xx-large" type="checkbox" label="Show List View"  checked={showlistView} onchange={handleshowListView} ></lightning-input>
+                 </div>
+				</div>
+				
+			</div>
+			</div>
+			<!-- Modal/Popup Box LWC footer starts here -->
+			<footer class="slds-modal__footer">
+				<button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+				<button class="slds-button slds-button_brand" onclick={submitDetails} title="Save">Save</button>
+			</footer>
+		</div>
+</section>
+<div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+
+<template if:true={bShowModal}>
+<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+<div class="slds-modal__container">
+<!-- modal header -->
+<header class="slds-modal__header">
+<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeEditModal}>
+<lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small" ></lightning-icon>
+</button>
+<h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate" if:true={isEditForm}>Update Record Values</h2>
+</header>
+<!-- Model Body-->
+<div if:true={isEditForm} class="slds-theme_default slds-scrollable">
+<div class="slds-grid slds-wrap slds-m-around_medium">
+<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+	<lightning-input type="text" class="validateEdit" label="Name" value={editnameValue} onchange={handleEditNameChange} required>
+	</lightning-input>
+</div>
+<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+	<lightning-combobox name="contacts"  class="validateEdit" label="Source Object" placeholder="Choose object..."
+		value={editobjectValue} onchange={handleEditObjectChange} options={objectOptions} required>
+	</lightning-combobox>
+</div>
+<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+	<lightning-combobox name="contacts"     class="validateEdit" label="Source Address" placeholder="Choose Addess...."
+		value={editfieldName}  onchange={handleEditFieldChange}  options={fieldList} required>
+	</lightning-combobox>
+</div>
+
+	<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+		<lightning-combobox name="contacts" class="validateEdit"  label="Target Object" placeholder="Choose object..."
+			value={targetEditObjectValue} onchange={handleEditTagetObjectChange} options={targetobjectOptions} required>
+		</lightning-combobox>
+	</div>
+	<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+		<lightning-combobox name="contacts"  class="validateEdit" label="Target Address" placeholder="Choose address..."
+			value={tagretEditfieldName} onchange={handleEditTargetFieldChange} options={trgetAddressfieldList} required>
+		</lightning-combobox>
+	</div>
+
+<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+	<lightning-input type="text"  class="validateEdit" label="Distance" value={editDistanceValue} onchange={handleEditDistanceValueChange}  required >
+	</lightning-input>
+</div>
+<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+	<lightning-combobox name="distance"  class="validateEdit" label="Distance Unit" placeholder="Choose distance..."
+		value={editDistanceName} onchange={handleEditDistanceChange} options={distanceList} required>
+	</lightning-combobox>
+</div>
+<div
+					class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12 slds-p-vertical_x-small">
+					<p class="slds-text-heading_small">Filter By Additional Fields:</p>
+				</div>
+
+
+				<div style="display:flex; justify-content: space-around; margin-left: 20px; width: 100%;">
+					<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12">
+						<lightning-combobox name="contacts" label="Fields" placeholder="Choose field..."
+							value={editLogicValue} onchange={logicEditHandleChange} options={trgetfieldList}>
+						</lightning-combobox>
+					</div>
+					<div
+						class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12 slds-p-horizontal_medium">
+						<lightning-combobox name="contacts" label="Operators" placeholder="Choose operator..."
+							value={editOperatorValue} onchange={operatorEditHandleChange} options={operatorsOptions}>
+						</lightning-combobox>
+					</div>
+					<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12">
+						<lightning-input type="text" label="Value" value={editFilterValue} onchange={handleEditFilterChange} >
+						</lightning-input>
+					</div>
+
+					<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12" style="margin-top: 31px;">
+						<lightning-layout-item padding="horizontal-small">
+							<lightning-button
+								 variant="brand"
+								 label="Add"
+								 onclick={addFilterToListInEdit}>
+							</lightning-button>
+						</lightning-layout-item>
+					</div>
+
+				</div>
+  <div class="editScroll" >  
+					<ul class="slds-has-dividers_around-space">
+						<template for:each={itemListInEdit} for:item="item" for:index="index">
+							<li class="slds-item" key={item.id}>
+								<lightning-layout multiple-rows>
+									<div style="display: flex; justify-content: space-around;">			
+									<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12" style="margin:-2px">
+											<lightning-input name="contacts" label="Fields" placeholder="Choose field..."
+												value={item.templogicValue}   style="margin:-2px" disabled>
+											</lightning-input>
+										</div>
+										<div
+											class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12 slds-p-horizontal_medium">
+											<lightning-input name="contacts" label="Operators" placeholder="Choose operator..."
+												value={item.tempoperatorValue}   style="margin:-4px" disabled>
+											</lightning-input>
+										</div>
+										<div class="slds-col slds-large-size_3-of-12 slds-medium-size_3-of-12 slds-size_3-of-12">
+											<lightning-input type="text" label="Value" value={item.tempfilterValue}  style="margin:-3px" disabled>
+											</lightning-input>
+										</div>
+									<div class="slds-p-top_medium">
+										</lightning-icon> -->
+										<lightning-icon icon-name="action:delete" access-key={item.id} id={index}
+											alternative-text="Delete Row" size="small" title="Delete Row" onclick={removeRowInEdit}>
+										</lightning-icon>
+									</div>
+								</div>
+								</lightning-layout>
+							</li>
+						</template>
+					</ul>
+				</div>
+					<div>
+							<lightning-radio-group name="radioGroup"
+                          label="Filter Logic"
+                          options={andOroptions}
+                          value={IsORInEditValue}
+								  onchange={handleIsOrChangeInEdit}
+                          type="radio"></lightning-radio-group>
+					</div>
+
+
+				
+
+
+<div class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12">
+	
+	<lightning-combobox name="editLimit"   class ="validateEdit" label="Limit" placeholder="Choose Limit..."
+					value={editLimitsValue} onchange={handleEditLimitChange} options={limitOptions} required>
+				</lightning-combobox>
+</div>
+<div
+	class="slds-col slds-large-size_12-of-12 slds-medium-size_12-of-12 slds-size_12-of-12 slds-p-vertical_x-small">
+	<lightning-input type="checkbox" label="Active/Inactive" checked={editCheckboxVal}
+		onchange={handleEditStatusChange}></lightning-input>
+
+<div style="width:44%; margin-left:-8.1%" >
+ <lightning-input class="slds-p-left_xx-large" type="checkbox" label="Show List View" checked={editShowListView} onchange={handeleditShowListView} ></lightning-input>
+</div>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+<footer class="slds-modal__footer">
+<button class="slds-button slds-button_neutral" onclick={closeEditModal} title="Cancel">Cancel</button>
+<button class="slds-button slds-button_brand" onclick={submitEditDetails} title="Save">Update Record</button>
+</footer>
+
+</div>
+
+</section>
+</template> 
+
+
+
+
+<!-- #########################################-->
+<div>
+	<lightning-datatable
+	key-field="Id"
+	show-row-number-column = false
+	data={Datatable}
+	hide-checkbox-column = false
+	draft-values={draftValues}
+	onsave={handleSave}
+	onrowaction= {handleRowHandler}
+	columns={columns}>
+</lightning-datatable>
+</div>
+
+</lightning-card>
+</template>
